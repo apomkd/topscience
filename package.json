@@ -2,7 +2,7 @@
   "name": "topscience",
   "private": true,
   "version": "0.1.0",
-  "packageManager": "pnpm@10",
+  "packageManager": "pnpm@10.17.1",
   "scripts": {
     "dev": "echo \"Use app-level dev scripts\"",
     "build": "echo \"Use app-level build scripts\"",
