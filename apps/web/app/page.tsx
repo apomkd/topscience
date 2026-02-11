@@ -1,5 +1,6 @@
 import { CmsHealthCard } from "../components/CmsHealthCard";
 import { ArticleListCard } from "../components/ArticleListCard";
+import { LatestFromCmsCard } from "../components/LatestFromCmsCard";
 
 export default function HomePage() {
   return (
@@ -19,6 +20,7 @@ export default function HomePage() {
           <p className="small">Policy and quality gates placeholder.</p>
         </article>
         <ArticleListCard />
+        <LatestFromCmsCard />
         <CmsHealthCard />
       </section>
     </>
