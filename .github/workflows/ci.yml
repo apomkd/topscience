@@ -1,16 +1,30 @@
-name: ci
+name: CI
+
 on:
   pull_request:
-    branches: [develop, main]
   push:
-    branches: [develop]
+    branches: [develop, main]
+
 jobs:
-  verify:
+  web-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "lint placeholder"
-      - run: echo "typecheck placeholder"
-      - run: echo "test placeholder"
-      - run: echo "build placeholder"
-      - run: bash ops/ci/gates.sh
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare pnpm
+        run: corepack prepare pnpm@10.17.1 --activate
+
+      - name: Install web deps
+        run: pnpm --dir apps/web install --frozen-lockfile
+
+      - name: Build web
+        run: pnpm --dir apps/web build
