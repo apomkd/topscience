@@ -1,0 +1,9 @@
+{
+"name": "@topscience/cms",
+"private": true,
+"version": "0.1.0",
+"scripts": {
+"dev": "echo \"cms dev placeholder\"",
+"build": "echo \"cms build placeholder\""
+}
+}
