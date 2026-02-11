@@ -1,3 +1,4 @@
 .env
 .env.*
 !.env.example
+!infra/docker/.env.staging.example
