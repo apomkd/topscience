@@ -3,4 +3,6 @@ export type CmsArticle = {
   slug: string;
   title: string;
   excerpt?: string;
+  category?: string;
+  tags?: string[];
 };

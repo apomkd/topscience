@@ -15,7 +15,9 @@ export async function getLatestArticles(): Promise<CmsArticle[]> {
       id: String(r.id ?? ""),
       slug: String(r.slug ?? ""),
       title: String(r.title ?? "Untitled"),
-      excerpt: r.excerpt ? String(r.excerpt) : undefined
+      excerpt: r.excerpt ? String(r.excerpt) : undefined,
+      category: r.category ? String(r.category) : undefined,
+      tags: Array.isArray(r.tags) ? r.tags.map((t) => String(t)) : []
     })).filter((a: CmsArticle) => a.slug && a.title);
   } catch {
     return [];
