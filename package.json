@@ -1,12 +1,14 @@
 {
-"name": "topscience",
-"private": true,
-"version": "0.1.0",
-"packageManager": "pnpm@10",
-"scripts": {
-"dev": "echo \"Use app-level dev scripts\"",
-"build": "echo \"Use app-level build scripts\"",
-"lint": "echo \"TODO: wire lint\"",
-"test": "echo \"TODO: wire tests\""
-}
+  "name": "topscience",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10",
+  "scripts": {
+    "dev": "echo \"Use app-level dev scripts\"",
+    "build": "echo \"Use app-level build scripts\"",
+    "lint": "echo \"TODO: wire lint\"",
+    "test": "echo \"TODO: wire tests\"",
+    "web:dev": "pnpm --dir apps/web dev",
+    "web:build": "pnpm --dir apps/web build"
+  }
 }
