@@ -1,16 +1,16 @@
 import { CmsHealthCard } from "../components/CmsHealthCard";
 import { ArticleListCard } from "../components/ArticleListCard";
-import { LatestFromCmsCard } from "../components/LatestFromCmsCard";
+import { HeroSection } from "../components/HeroSection";
+import { SectionTitle } from "../components/SectionTitle";
+import { TopStoriesCard } from "../components/TopStoriesCard";
 
 export default function HomePage() {
   return (
     <>
-      <section className="card" style={{ marginBottom: 16 }}>
-        <h1 style={{ marginTop: 0 }}>topscience.news</h1>
-        <p className="small">P0 web + CMS baseline in progress.</p>
-      </section>
+      <HeroSection />
 
-      <section className="grid" style={{ marginBottom: 16 }}>
+      <SectionTitle title="Platform Overview" subtitle="Current P0 operational modules" />
+      <section className="grid" style={{ marginBottom: 20 }}>
         <article className="card">
           <h3 style={{ marginTop: 0 }}>Latest Science</h3>
           <p className="small">Content pipeline baseline active.</p>
@@ -22,11 +22,9 @@ export default function HomePage() {
         <CmsHealthCard />
       </section>
 
-      <section style={{ marginBottom: 16 }}>
-        <LatestFromCmsCard />
-      </section>
-
-      <section>
+      <SectionTitle title="Top Stories" subtitle="Demo ordering for P0 presentation mode" />
+      <section className="grid" style={{ marginBottom: 20 }}>
+        <TopStoriesCard />
         <ArticleListCard />
       </section>
     </>
