@@ -3,6 +3,7 @@ import { ArticleListCard } from "../components/ArticleListCard";
 import { HeroSection } from "../components/HeroSection";
 import { SectionTitle } from "../components/SectionTitle";
 import { TopStoriesCard } from "../components/TopStoriesCard";
+import { LatestFromCmsCard } from "../components/LatestFromCmsCard";
 
 export default function HomePage() {
   return (
@@ -20,6 +21,11 @@ export default function HomePage() {
           <p className="small">Policy and quality gates baseline active.</p>
         </article>
         <CmsHealthCard />
+      </section>
+
+      <SectionTitle title="Latest from CMS" subtitle="Live content from Directus" />
+      <section style={{ marginBottom: 20 }}>
+        <LatestFromCmsCard />
       </section>
 
       <SectionTitle title="Top Stories" subtitle="Demo ordering for P0 presentation mode" />
