@@ -1,4 +1,6 @@
 import { buildMetadata } from "../../../lib/seo";
+import { Breadcrumbs } from "../../../components/Breadcrumbs";
+import { RelatedDemoLinks } from "../../../components/RelatedDemoLinks";
 
 type Props = { params: { slug: string } };
 
@@ -21,8 +23,14 @@ export async function generateMetadata({ params }: Props) {
 export default function ArticlePage({ params }: Props) {
   return (
     <main style={{ padding: 24 }}>
-      <h1>{prettySlug(params.slug)}</h1>
-      <p className="small">Dynamic article route scaffold (P0).</p>
+      <Breadcrumbs slug={params.slug} />
+      <article className="card">
+        <h1 style={{ marginTop: 0 }}>{prettySlug(params.slug)}</h1>
+        <p className="small">
+          Dynamic article route scaffold (P0). Content body integration with CMS is next.
+        </p>
+      </article>
+      <RelatedDemoLinks current={params.slug} />
     </main>
   );
 }
