@@ -10,11 +10,14 @@ export async function LatestFromCmsCard() {
       {items.length === 0 ? (
         <p className="small">No CMS articles yet (fallback mode).</p>
       ) : (
-        <div className="grid">
-          {items.map((a) => (
-            <ArticlePreviewCard key={a.id} article={a} />
-          ))}
-        </div>
+        <>
+          <p className="small">Loaded {items.length} items from CMS.</p>
+          <div className="grid">
+            {items.map((a) => (
+              <ArticlePreviewCard key={a.id} article={a} />
+            ))}
+          </div>
+        </>
       )}
     </section>
   );
