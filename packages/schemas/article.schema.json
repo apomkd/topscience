@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://topscience.news/schemas/article.schema.json",
+  "title": "Article",
+  "type": "object",
+  "required": ["id", "title", "slug", "status"],
+  "properties": {
+    "id": { "type": ["string", "number"] },
+    "title": { "type": "string", "minLength": 1 },
+    "slug": { "type": "string", "minLength": 1 },
+    "excerpt": { "type": "string" },
+    "body": { "type": "string" },
+    "category": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "cover_image_url": { "type": "string" },
+    "published_at": { "type": "string" },
+    "status": { "type": "string", "enum": ["draft", "review", "published"] }
+  },
+  "additionalProperties": true
+}

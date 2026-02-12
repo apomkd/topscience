@@ -1,0 +1,48 @@
+services:
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    command: ["sh","-c","node -e \"require('http').createServer((_,res)=>res.end('topscience web ok')).listen(3000,'0.0.0.0')\""]
+    ports: ["3000:3000"]
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: topscience
+      POSTGRES_USER: topscience
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server","--appendonly","yes"]
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  cms:
+    image: directus/directus:10.13.1
+    depends_on: [postgres, redis]
+    ports: ["8055:8055"]
+    environment:
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      DB_CLIENT: pg
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: topscience
+      DB_USER: topscience
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      CACHE_ENABLED: "true"
+      CACHE_STORE: redis
+      REDIS: redis://redis:6379
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+  redis_data:

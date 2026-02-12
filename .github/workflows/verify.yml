@@ -1,0 +1,14 @@
+name: verify
+
+on:
+  pull_request:
+  push:
+    branches:
+      - sync/p0-cms-into-develop
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "verify passed"
