@@ -3,9 +3,10 @@ import type { CmsArticle } from "./types";
 
 export async function getLatestArticles(): Promise<CmsArticle[]> {
   try {
-    const res = await fetch(`${CMS_URL}/items/articles?limit=3&sort=-id&filter%5Bstatus%5D%5B_eq%5D=published`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${CMS_URL}/items/articles?limit=3&sort=-id&filter%5Bstatus%5D%5B_eq%5D=published`,
+      { cache: "no-store" }
+    );
 
     if (!res.ok) return [];
 
