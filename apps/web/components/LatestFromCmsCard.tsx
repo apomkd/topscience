@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { getLatestArticles } from "../lib/content";
+import { ArticlePreviewCard } from "./ArticlePreviewCard";
 
 export async function LatestFromCmsCard() {
   const items = await getLatestArticles();
@@ -10,13 +10,11 @@ export async function LatestFromCmsCard() {
       {items.length === 0 ? (
         <p className="small">No CMS articles yet (fallback mode).</p>
       ) : (
-        <ul style={{ margin: 0, paddingLeft: 18 }}>
+        <div className="grid">
           {items.map((a) => (
-            <li key={a.id} style={{ margin: "8px 0" }}>
-              <Link href={`/article/${a.slug}`}>{a.title}</Link>
-            </li>
+            <ArticlePreviewCard key={a.id} article={a} />
           ))}
-        </ul>
+        </div>
       )}
     </section>
   );
