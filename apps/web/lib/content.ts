@@ -5,7 +5,7 @@ export async function getLatestArticles(): Promise<CmsArticle[]> {
   try {
     const res = await fetch(
       `${CMS_URL}/items/articles?limit=3&sort=-id&filter%5Bstatus%5D%5B_eq%5D=published`,
-      { cache: "no-store" }
+      { next: { revalidate: 60 } }
     );
     if (!res.ok) return [];
     const json = await res.json();
@@ -30,7 +30,7 @@ export async function getArticleBySlug(slug: string): Promise<CmsArticle | null>
     const url =
       `${CMS_URL}/items/articles?limit=1&filter%5Bslug%5D%5B_eq%5D=${encodeURIComponent(slug)}` +
       `&filter%5Bstatus%5D%5B_eq%5D=published`;
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(url, { next: { revalidate: 60 } });
     if (!res.ok) return null;
 
     const json = await res.json();
