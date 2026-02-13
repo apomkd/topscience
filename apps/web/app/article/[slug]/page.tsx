@@ -1,15 +1,16 @@
 import { notFound } from "next/navigation";
 import { buildMetadata } from "../../../lib/seo";
 import { Breadcrumbs } from "../../../components/Breadcrumbs";
-import { RelatedDemoLinks } from "../../../components/RelatedDemoLinks";
-import { getArticleBySlug } from "../../../lib/content";
+import { RelatedCmsLinks } from "../../../components/RelatedCmsLinks";
+import { getArticleBySlug, getRelatedArticles } from "../../../lib/content";
 
 type Props = { params: { slug: string } };
 
 export async function generateMetadata({ params }: Props) {
   const article = await getArticleBySlug(params.slug);
   if (!article) {
-    return buildMetadata({
+
+return buildMetadata({
       title: "Article not found | topscience.news",
       description: "Requested article was not found.",
       path: `/article/${params.slug}`,
@@ -27,17 +28,28 @@ export default async function ArticlePage({ params }: Props) {
   const article = await getArticleBySlug(params.slug);
   if (!article) notFound();
 
+  const related = await getRelatedArticles(article.category, article.slug);
+
   return (
     <main style={{ padding: 24 }}>
       <Breadcrumbs slug={article.slug} />
       <article className="card">
         <h1 style={{ marginTop: 0 }}>{article.title}</h1>
         {article.excerpt ? <p className="small">{article.excerpt}</p> : null}
-        <p className="small">
-          Category: {article.category ?? "general"}
-        </p>
+        <p className="small">Category: {article.category ?? "general"}</p>
+
+        {article.body ? (
+          <div style={{ marginTop: 16, lineHeight: 1.6 }}>
+            {article.body}
+          </div>
+        ) : (
+          <p className="small" style={{ marginTop: 16 }}>
+            No body content yet.
+          </p>
+        )}
       </article>
-      <RelatedDemoLinks current={article.slug} />
+
+      <RelatedCmsLinks items={related} />
     </main>
   );
 }
