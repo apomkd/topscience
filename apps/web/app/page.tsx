@@ -1,8 +1,6 @@
 import { CmsHealthCard } from "../components/CmsHealthCard";
-import { ArticleListCard } from "../components/ArticleListCard";
 import { HeroSection } from "../components/HeroSection";
 import { SectionTitle } from "../components/SectionTitle";
-import { TopStoriesCard } from "../components/TopStoriesCard";
 import { LatestFromCmsCard } from "../components/LatestFromCmsCard";
 
 export default function HomePage() {
@@ -14,7 +12,7 @@ export default function HomePage() {
       <section className="grid" style={{ marginBottom: 20 }}>
         <article className="card">
           <h3 style={{ marginTop: 0 }}>Latest Science</h3>
-          <p className="small">Content pipeline baseline active.</p>
+          <p className="small">Live CMS-backed publishing enabled.</p>
         </article>
         <article className="card">
           <h3 style={{ marginTop: 0 }}>Editorial</h3>
@@ -26,12 +24,6 @@ export default function HomePage() {
       <SectionTitle title="Latest from CMS" subtitle="Live content from Directus" />
       <section style={{ marginBottom: 20 }}>
         <LatestFromCmsCard />
-      </section>
-
-      <SectionTitle title="Top Stories" subtitle="Demo ordering for P0 presentation mode" />
-      <section className="grid" style={{ marginBottom: 20 }}>
-        <TopStoriesCard />
-        <ArticleListCard />
       </section>
     </>
   );
