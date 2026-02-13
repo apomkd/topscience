@@ -49,3 +49,31 @@ export async function getArticleBySlug(slug: string): Promise<CmsArticle | null>
     return null;
   }
 }
+
+export async function getArticlesByCategory(slug: string): Promise<CmsArticle[]> {
+  try {
+    const url =
+      `${CMS_URL}/items/articles?limit=20&sort=-id` +
+      `&filter%5Bstatus%5D%5B_eq%5D=published` +
+      `&filter%5Bcategory%5D%5B_eq%5D=${encodeURIComponent(slug)}`;
+
+    const res = await fetch(url, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+
+    const json = await res.json();
+    const rows = Array.isArray(json?.data) ? json.data : [];
+    return rows
+      .map((r: any) => ({
+        id: String(r.id ?? ""),
+        slug: String(r.slug ?? ""),
+        title: String(r.title ?? "Untitled"),
+        excerpt: r.excerpt ? String(r.excerpt) : undefined,
+        body: r.body ? String(r.body) : undefined,
+        category: r.category ? String(r.category) : undefined,
+        tags: Array.isArray(r.tags) ? r.tags.map((t: unknown) => String(t)) : [],
+      }))
+      .filter((a: CmsArticle) => a.slug && a.title);
+  } catch {
+    return [];
+  }
+}
