@@ -1,36 +1,43 @@
+import { notFound } from "next/navigation";
 import { buildMetadata } from "../../../lib/seo";
 import { Breadcrumbs } from "../../../components/Breadcrumbs";
 import { RelatedDemoLinks } from "../../../components/RelatedDemoLinks";
+import { getArticleBySlug } from "../../../lib/content";
 
 type Props = { params: { slug: string } };
 
-function prettySlug(slug: string) {
-  return slug
-    .split("-")
-    .map((x) => x.charAt(0).toUpperCase() + x.slice(1))
-    .join(" ");
-}
-
 export async function generateMetadata({ params }: Props) {
-  const title = `${prettySlug(params.slug)} | topscience.news`;
+  const article = await getArticleBySlug(params.slug);
+  if (!article) {
+    return buildMetadata({
+      title: "Article not found | topscience.news",
+      description: "Requested article was not found.",
+      path: `/article/${params.slug}`,
+    });
+  }
+
   return buildMetadata({
-    title,
-    description: `Science article page for ${params.slug}`,
-    path: `/article/${params.slug}`
+    title: `${article.title} | topscience.news`,
+    description: article.excerpt ?? `Science article: ${article.slug}`,
+    path: `/article/${article.slug}`,
   });
 }
 
-export default function ArticlePage({ params }: Props) {
+export default async function ArticlePage({ params }: Props) {
+  const article = await getArticleBySlug(params.slug);
+  if (!article) notFound();
+
   return (
     <main style={{ padding: 24 }}>
-      <Breadcrumbs slug={params.slug} />
+      <Breadcrumbs slug={article.slug} />
       <article className="card">
-        <h1 style={{ marginTop: 0 }}>{prettySlug(params.slug)}</h1>
+        <h1 style={{ marginTop: 0 }}>{article.title}</h1>
+        {article.excerpt ? <p className="small">{article.excerpt}</p> : null}
         <p className="small">
-          Dynamic article route scaffold (P0). Content body integration with CMS is next.
+          Category: {article.category ?? "general"}
         </p>
       </article>
-      <RelatedDemoLinks current={params.slug} />
+      <RelatedDemoLinks current={article.slug} />
     </main>
   );
 }
