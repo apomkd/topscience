@@ -77,3 +77,33 @@ export async function getArticlesByCategory(slug: string): Promise<CmsArticle[]>
     return [];
   }
 }
+
+export async function getLatestArticlesByType(contentType: string, limit = 4): Promise<CmsArticle[]> {
+  try {
+    const url =
+      `${CMS_URL}/items/articles?limit=${limit}&sort=-id` +
+      `&filter%5Bstatus%5D%5B_eq%5D=published` +
+      `&filter%5Bcontent_type%5D%5B_eq%5D=${encodeURIComponent(contentType)}`;
+
+    const res = await fetch(url, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+
+    const json = await res.json();
+    const rows = Array.isArray(json?.data) ? json.data : [];
+
+    return rows
+      .map((r: any) => ({
+        id: String(r.id ?? ""),
+        slug: String(r.slug ?? ""),
+        title: String(r.title ?? "Untitled"),
+        excerpt: r.excerpt ? String(r.excerpt) : undefined,
+        body: r.body ? String(r.body) : undefined,
+        category: r.category ? String(r.category) : undefined,
+        content_type: r.content_type ? String(r.content_type) : "news",
+        tags: Array.isArray(r.tags) ? r.tags.map((t: unknown) => String(t)) : [],
+      }))
+      .filter((a: CmsArticle) => a.slug && a.title);
+  } catch {
+    return [];
+  }
+}
