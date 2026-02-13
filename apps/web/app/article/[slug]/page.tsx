@@ -34,7 +34,7 @@ export default async function ArticlePage({ params }: Props) {
         <h1 style={{ marginTop: 0 }}>{article.title}</h1>
         {article.excerpt ? <p className="small">{article.excerpt}</p> : null}
         <p className="small">
-          Category: {article.category ?? "general"}
+          Type: {article.content_type ?? "news"} · Published in {article.category ?? "general"}
         </p>
       </article>
       <RelatedDemoLinks current={article.slug} />

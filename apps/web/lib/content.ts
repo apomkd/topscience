@@ -17,6 +17,7 @@ export async function getLatestArticles(): Promise<CmsArticle[]> {
         title: String(r.title ?? "Untitled"),
         excerpt: r.excerpt ? String(r.excerpt) : undefined,
         category: r.category ? String(r.category) : undefined,
+      content_type: r.content_type ? String(r.content_type) : "news",
         tags: Array.isArray(r.tags) ? r.tags.map((t: unknown) => String(t)) : [],
       }))
       .filter((a: CmsArticle) => a.slug && a.title);
@@ -70,6 +71,7 @@ export async function getArticlesByCategory(slug: string): Promise<CmsArticle[]>
         excerpt: r.excerpt ? String(r.excerpt) : undefined,
         body: r.body ? String(r.body) : undefined,
         category: r.category ? String(r.category) : undefined,
+      content_type: r.content_type ? String(r.content_type) : "news",
         tags: Array.isArray(r.tags) ? r.tags.map((t: unknown) => String(t)) : [],
       }))
       .filter((a: CmsArticle) => a.slug && a.title);
