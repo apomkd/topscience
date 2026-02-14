@@ -32,6 +32,7 @@ export default function HomePage() {
         <LatestByTypeCard contentType="news" title="Latest News" />
         <LatestByTypeCard contentType="analysis" title="Latest Analysis" />
         <LatestByTypeCard contentType="explainer" title="Latest Explainers" />
+        <LatestByTypeCard contentType="popular-science" title="Latest Popular Science" />
       </section>
     </>
   );
