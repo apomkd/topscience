@@ -107,3 +107,55 @@ export async function getLatestArticlesByType(contentType: string, limit = 4): P
     return [];
   }
 }
+
+export type DraftBacklogItem = CmsArticle & {
+  missing_body: boolean;
+  missing_excerpt: boolean;
+  priority: "high" | "normal";
+};
+
+export async function getDraftBacklogWithPriority(limit = 50): Promise<DraftBacklogItem[]> {
+  const drafts = await getDraftBacklog(limit);
+
+  return drafts.map((a) => {
+    const missing_body = !(a.body && a.body.trim().length > 0);
+    const missing_excerpt = !(a.excerpt && a.excerpt.trim().length > 0);
+    const priority: "high" | "normal" = missing_body || missing_excerpt ? "high" : "normal";
+
+    return {
+      ...a,
+      missing_body,
+      missing_excerpt,
+      priority,
+    };
+  });
+}
+
+export async function getDraftBacklog(limit = 50): Promise<CmsArticle[]> {
+  try {
+    const res = await fetch(
+      `${CMS_URL}/items/articles?limit=${limit}&sort=id&filter%5Bstatus%5D%5B_eq%5D=draft`,
+      { next: { revalidate: 60 } }
+    );
+    if (!res.ok) return [];
+    const json = await res.json();
+    const rows = Array.isArray(json?.data) ? json.data : [];
+    return rows
+      .map((r: any) => ({
+        id: String(r.id ?? ""),
+        slug: String(r.slug ?? ""),
+        title: String(r.title ?? "Untitled"),
+        excerpt: r.excerpt ? String(r.excerpt) : undefined,
+        body: r.body ? String(r.body) : undefined,
+        category: r.category ? String(r.category) : undefined,
+        content_type: r.content_type ? String(r.content_type) : "news",
+        author_name: r.author_name ? String(r.author_name) : undefined,
+        published_at: r.published_at ? String(r.published_at) : undefined,
+        cover_image_url: r.cover_image_url ? String(r.cover_image_url) : undefined,
+        tags: Array.isArray(r.tags) ? r.tags.map((t: unknown) => String(t)) : [],
+      }))
+      .filter((a: CmsArticle) => a.slug && a.title);
+  } catch {
+    return [];
+  }
+}
