@@ -107,3 +107,31 @@ export async function getLatestArticlesByType(contentType: string, limit = 4): P
     return [];
   }
 }
+
+export async function getArticleBySlugAnyStatus(slug: string): Promise<CmsArticle | null> {
+  try {
+    const res = await fetch(
+      `${CMS_URL}/items/articles?limit=1&filter%5Bslug%5D%5B_eq%5D=${encodeURIComponent(slug)}`,
+      { next: { revalidate: 0 } }
+    );
+    if (!res.ok) return null;
+    const json = await res.json();
+    const row = Array.isArray(json?.data) ? json.data[0] : null;
+    if (!row) return null;
+
+    return {
+      id: String(row.id ?? ""),
+      slug: String(row.slug ?? ""),
+      title: String(row.title ?? "Untitled"),
+      excerpt: row.excerpt ? String(row.excerpt) : undefined,
+      body: row.body ? String(row.body) : undefined,
+      category: row.category ? String(row.category) : undefined,
+      content_type: row.content_type ? String(row.content_type) : "news",
+      author_name: row.author_name ? String(row.author_name) : undefined,
+      published_at: row.published_at ? String(row.published_at) : undefined,
+      tags: Array.isArray(row.tags) ? row.tags.map((t: unknown) => String(t)) : [],
+    };
+  } catch {
+    return null;
+  }
+}
