@@ -107,3 +107,46 @@ export async function getLatestArticlesByType(contentType: string, limit = 4): P
     return [];
   }
 }
+
+export async function getArticlesByCategoryPaged(
+  slug: string,
+  page: number,
+  pageSize = 10
+): Promise<{ items: CmsArticle[]; total: number }> {
+  const safePage = Math.max(1, page);
+  const offset = (safePage - 1) * pageSize;
+
+  try {
+    const url =
+      `${CMS_URL}/items/articles?limit=${pageSize}&offset=${offset}&sort=-id` +
+      `&filter%5Bstatus%5D%5B_eq%5D=published` +
+      `&filter%5Bcategory%5D%5B_eq%5D=${encodeURIComponent(slug)}` +
+      `&meta=filter_count`;
+
+    const res = await fetch(url, { next: { revalidate: 60 } });
+    if (!res.ok) return { items: [], total: 0 };
+
+    const json = await res.json();
+    const rows = Array.isArray(json?.data) ? json.data : [];
+    const total = Number(json?.meta?.filter_count ?? 0);
+
+    const items: CmsArticle[] = rows
+      .map((r: any) => ({
+        id: String(r.id ?? ""),
+        slug: String(r.slug ?? ""),
+        title: String(r.title ?? "Untitled"),
+        excerpt: r.excerpt ? String(r.excerpt) : undefined,
+        body: r.body ? String(r.body) : undefined,
+        category: r.category ? String(r.category) : undefined,
+        content_type: r.content_type ? String(r.content_type) : "news",
+        author_name: r.author_name ? String(r.author_name) : undefined,
+        published_at: r.published_at ? String(r.published_at) : undefined,
+        tags: Array.isArray(r.tags) ? r.tags.map((t: unknown) => String(t)) : [],
+      }))
+      .filter((a: CmsArticle) => a.slug && a.title);
+
+    return { items, total };
+  } catch {
+    return { items: [], total: 0 };
+  }
+}
