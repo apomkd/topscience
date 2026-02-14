@@ -28,3 +28,9 @@ jobs:
 
       - name: Build web
         run: pnpm --dir apps/web build
+      - name: Start web for smoke
+        run: |
+          nohup pnpm --dir apps/web exec next start -p 3000 >/tmp/ci-web.log 2>&1 &
+          sleep 2
+      - name: Homepage smoke assert
+        run: /opt/topscience/ops/scripts/ci-homepage-smoke.sh
