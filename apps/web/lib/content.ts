@@ -107,3 +107,31 @@ export async function getLatestArticlesByType(contentType: string, limit = 4): P
     return [];
   }
 }
+
+export async function getEditorialStats(): Promise<{
+  drafts: number;
+  published: number;
+  categories: number;
+}> {
+  try {
+    const [draftsRes, publishedRes, categoriesRes] = await Promise.all([
+      fetch(`${CMS_URL}/items/articles?limit=1&meta=filter_count&filter%5Bstatus%5D%5B_eq%5D=draft`, {
+        next: { revalidate: 60 },
+      }),
+      fetch(`${CMS_URL}/items/articles?limit=1&meta=filter_count&filter%5Bstatus%5D%5B_eq%5D=published`, {
+        next: { revalidate: 60 },
+      }),
+      fetch(`${CMS_URL}/items/categories?limit=1&meta=filter_count`, {
+        next: { revalidate: 60 },
+      }),
+    ]);
+
+    const drafts = draftsRes.ok ? Number((await draftsRes.json())?.meta?.filter_count ?? 0) : 0;
+    const published = publishedRes.ok ? Number((await publishedRes.json())?.meta?.filter_count ?? 0) : 0;
+    const categories = categoriesRes.ok ? Number((await categoriesRes.json())?.meta?.filter_count ?? 0) : 0;
+
+    return { drafts, published, categories };
+  } catch {
+    return { drafts: 0, published: 0, categories: 0 };
+  }
+}
