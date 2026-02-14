@@ -107,3 +107,46 @@ export async function getLatestArticlesByType(contentType: string, limit = 4): P
     return [];
   }
 }
+
+export async function getTrendingTags(limit = 10): Promise<string[]> {
+  const latest = await getLatestArticles();
+  const freq = new Map<string, number>();
+
+  for (const a of latest) {
+    for (const t of a.tags ?? []) {
+      const tag = String(t).trim().toLowerCase();
+      if (!tag) continue;
+      freq.set(tag, (freq.get(tag) ?? 0) + 1);
+    }
+  }
+
+  return [...freq.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([tag]) => tag);
+}
+
+export async function getQuickStats(): Promise<{ published: number; categories: number }> {
+  try {
+    const [articlesRes, categoriesRes] = await Promise.all([
+      fetch(`${CMS_URL}/items/articles?limit=1&meta=filter_count&filter%5Bstatus%5D%5B_eq%5D=published`, { next: { revalidate: 60 } }),
+      fetch(`${CMS_URL}/items/categories?limit=1&meta=filter_count`, { next: { revalidate: 60 } }),
+    ]);
+
+    let published = 0;
+    let categories = 0;
+
+    if (articlesRes.ok) {
+      const j = await articlesRes.json();
+      published = Number(j?.meta?.filter_count ?? 0);
+    }
+    if (categoriesRes.ok) {
+      const j = await categoriesRes.json();
+      categories = Number(j?.meta?.filter_count ?? 0);
+    }
+
+    return { published, categories };
+  } catch {
+    return { published: 0, categories: 0 };
+  }
+}

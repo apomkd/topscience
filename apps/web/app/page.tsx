@@ -1,3 +1,5 @@
+import { TrendingTagsCard } from "../components/TrendingTagsCard";
+import { QuickStatsCard } from "../components/QuickStatsCard";
 import { CmsHealthCard } from "../components/CmsHealthCard";
 import { HeroSection } from "../components/HeroSection";
 import { SectionTitle } from "../components/SectionTitle";
@@ -25,6 +27,13 @@ export default function HomePage() {
       <SectionTitle title="Latest from CMS" subtitle="Live content from Directus" />
       <section style={{ marginBottom: 20 }}>
         <LatestFromCmsCard />
+      </section>
+
+
+      <SectionTitle title="Widgets" subtitle="Quick editorial insights" />
+      <section className="grid" style={{ marginBottom: 20 }}>
+        <QuickStatsCard />
+        <TrendingTagsCard />
       </section>
 
       <SectionTitle title="By Content Type" subtitle="Editorial distribution by format" />
