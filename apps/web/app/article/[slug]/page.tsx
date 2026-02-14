@@ -6,6 +6,11 @@ import { getArticleBySlug } from "../../../lib/content";
 
 type Props = { params: { slug: string } };
 
+function estimateReadingMinutes(text?: string) {
+  const words = (text ?? "").trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
 export async function generateMetadata({ params }: Props) {
   const article = await getArticleBySlug(params.slug);
   if (!article) {
@@ -28,15 +33,50 @@ export default async function ArticlePage({ params }: Props) {
   if (!article) notFound();
 
   return (
-    <main style={{ padding: 24 }}>
+    <main className="article-shell" style={{ padding: 24 }}>
       <Breadcrumbs slug={article.slug} />
       <article className="card">
-        <h1 style={{ marginTop: 0 }}>{article.title}</h1>
+        <h1 className="article-title">{article.title}</h1>
+
+        {article.cover_image_url ? (
+          <img
+            src={article.cover_image_url}
+            alt={article.title}
+            style={{
+              width: "100%",
+              maxHeight: 420,
+              objectFit: "cover",
+              borderRadius: 12,
+              border: "1px solid var(--border)",
+              marginBottom: 14,
+            }}
+          />
+        ) : null}
+
         {article.excerpt ? <p className="small">{article.excerpt}</p> : null}
-        <p className="small">
-          Category: {article.category ?? "general"}
+
+        <p className="article-meta">
+          {article.author_name ?? "TopScience Editorial"} ·{" "}
+          {article.published_at
+            ? new Date(article.published_at).toLocaleDateString("en-GB")
+            : "Date TBD"}{" "}
+          · {estimateReadingMinutes(article.body)} min read
         </p>
+
+        <p className="article-meta">
+          Type: {article.content_type ?? "news"} · Published in{" "}
+          {article.category ?? "general"}
+        </p>
+
+        {article.body ? (
+          <div className="article-body">{article.body}</div>
+        ) : (
+          <p className="small" style={{ marginTop: 16 }}>
+            No body content yet.
+          </p>
+        )}
       </article>
+
       <RelatedDemoLinks current={article.slug} />
     </main>
   );
