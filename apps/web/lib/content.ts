@@ -107,3 +107,7 @@ export async function getLatestArticlesByType(contentType: string, limit = 4): P
     return [];
   }
 }
+
+export async function getDailyDigestArticles(limit = 10): Promise<CmsArticle[]> {
+  return getLatestArticles();
+}

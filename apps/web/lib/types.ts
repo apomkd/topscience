@@ -3,6 +3,11 @@ export type CmsArticle = {
   slug: string;
   title: string;
   excerpt?: string;
+  body?: string;
   category?: string;
-  tags?: string[];
+  content_type?: string;
+  author_name?: string;
+  published_at?: string;
+  cover_image_url?: string;
+  tags: string[];
 };
