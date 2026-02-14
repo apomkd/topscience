@@ -1,7 +1,7 @@
 import { CMS_URL } from "./cms";
 import type { CmsArticle } from "./types";
 
-export async function getLatestArticles(): Promise<CmsArticle[]> {
+export async function getLatestArticles(limit = 20): Promise<CmsArticle[]> {
   try {
     const res = await fetch(
       `${CMS_URL}/items/articles?limit=3&sort=-id&filter%5Bstatus%5D%5B_eq%5D=published`,
@@ -105,5 +105,52 @@ export async function getLatestArticlesByType(contentType: string, limit = 4): P
       .filter((a: CmsArticle) => a.slug && a.title);
   } catch {
     return [];
+  }
+}
+
+export async function getFeaturedArticle(): Promise<CmsArticle | null> {
+  try {
+    const latest = await getLatestArticles(1);
+    return latest[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getTrendingTags(limit = 10): Promise<string[]> {
+  const latest = await getLatestArticles(30);
+  const freq = new Map<string, number>();
+
+  for (const a of latest) {
+    for (const t of a.tags ?? []) {
+      const tag = String(t).trim().toLowerCase();
+      if (!tag) continue;
+      freq.set(tag, (freq.get(tag) ?? 0) + 1);
+    }
+  }
+
+  return [...freq.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([tag]) => tag);
+}
+
+export async function getQuickStats(): Promise<{ published: number; categories: number }> {
+  try {
+    const [articlesRes, categoriesRes] = await Promise.all([
+      fetch(`${CMS_URL}/items/articles?limit=1&meta=filter_count&filter%5Bstatus%5D%5B_eq%5D=published`, {
+        next: { revalidate: 60 },
+      }),
+      fetch(`${CMS_URL}/items/categories?limit=1&meta=filter_count`, {
+        next: { revalidate: 60 },
+      }),
+    ]);
+
+    const published = articlesRes.ok ? Number((await articlesRes.json())?.meta?.filter_count ?? 0) : 0;
+    const categories = categoriesRes.ok ? Number((await categoriesRes.json())?.meta?.filter_count ?? 0) : 0;
+
+    return { published, categories };
+  } catch {
+    return { published: 0, categories: 0 };
   }
 }
