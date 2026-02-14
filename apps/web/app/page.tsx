@@ -3,6 +3,7 @@ import { HeroSection } from "../components/HeroSection";
 import { SectionTitle } from "../components/SectionTitle";
 import { LatestFromCmsCard } from "../components/LatestFromCmsCard";
 import { LatestByTypeCard } from "../components/LatestByTypeCard";
+import { CategoryQuickGrid } from "../components/CategoryQuickGrid";
 
 export default function HomePage() {
   return (
@@ -25,6 +26,11 @@ export default function HomePage() {
       <SectionTitle title="Latest from CMS" subtitle="Live content from Directus" />
       <section style={{ marginBottom: 20 }}>
         <LatestFromCmsCard />
+      </section>
+
+      <SectionTitle title="Categories" subtitle="Navigate by science domain" />
+      <section style={{ marginBottom: 20 }}>
+        <CategoryQuickGrid />
       </section>
 
       <SectionTitle title="By Content Type" subtitle="Editorial distribution by format" />
