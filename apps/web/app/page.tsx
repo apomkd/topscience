@@ -10,7 +10,7 @@ export default function HomePage() {
       <HeroSection />
 
       <SectionTitle title="Platform Overview" subtitle="Current P0 operational modules" />
-      <section className="grid" style={{ marginBottom: 20 }}>
+      <section className="grid section-block">
         <article className="card">
           <h3 style={{ marginTop: 0 }}>Latest Science</h3>
           <p className="small">Live CMS-backed publishing enabled.</p>
@@ -23,12 +23,12 @@ export default function HomePage() {
       </section>
 
       <SectionTitle title="Latest from CMS" subtitle="Live content from Directus" />
-      <section style={{ marginBottom: 20 }}>
+      <section className="section-block">
         <LatestFromCmsCard />
       </section>
 
       <SectionTitle title="By Content Type" subtitle="Editorial distribution by format" />
-      <section className="grid" style={{ marginBottom: 20 }}>
+      <section className="grid section-block">
         <LatestByTypeCard contentType="news" title="Latest News" />
         <LatestByTypeCard contentType="analysis" title="Latest Analysis" />
         <LatestByTypeCard contentType="explainer" title="Latest Explainers" />

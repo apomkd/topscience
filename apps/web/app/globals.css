@@ -125,3 +125,33 @@ button:hover { filter: brightness(1.05); }
 
 ul { margin: 0; padding-left: 18px; }
 li { margin: 6px 0; }
+
+/* UI polish v2 */
+.card h1, .card h2, .card h3 {
+  letter-spacing: 0.1px;
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+.section-block {
+  margin-bottom: var(--space-5);
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  color: var(--text-soft);
+  font-size: var(--fs-meta);
+}
+
+.kicker {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--brand-2);
+}
