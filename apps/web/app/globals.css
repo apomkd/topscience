@@ -125,3 +125,31 @@ button:hover { filter: brightness(1.05); }
 
 ul { margin: 0; padding-left: 18px; }
 li { margin: 6px 0; }
+
+.article-shell {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.article-title {
+  margin-top: 0;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.article-meta {
+  margin: 8px 0;
+  color: var(--text-soft);
+  font-size: var(--fs-meta);
+}
+
+.article-body {
+  margin-top: 18px;
+  line-height: 1.8;
+  font-size: 1.03rem;
+  max-width: 72ch;
+}
+
+.article-body p {
+  margin: 0 0 14px;
+}

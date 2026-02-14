@@ -107,3 +107,43 @@ export async function getLatestArticlesByType(contentType: string, limit = 4): P
     return [];
   }
 }
+
+export async function getRelatedArticles(
+  category: string | undefined,
+  currentSlug: string
+): Promise<CmsArticle[]> {
+  try {
+    if (category) {
+      const res = await fetch(
+        `${CMS_URL}/items/articles?limit=6&sort=-id&filter%5Bstatus%5D%5B_eq%5D=published&filter%5Bcategory%5D%5B_eq%5D=${encodeURIComponent(category)}`,
+        { next: { revalidate: 60 } }
+      );
+      if (res.ok) {
+        const json = await res.json();
+        const rows = Array.isArray(json?.data) ? json.data : [];
+        const items = rows
+          .map((r: any) => ({
+            id: String(r.id ?? ""),
+            slug: String(r.slug ?? ""),
+            title: String(r.title ?? "Untitled"),
+            excerpt: r.excerpt ? String(r.excerpt) : undefined,
+            body: r.body ? String(r.body) : undefined,
+            category: r.category ? String(r.category) : undefined,
+            content_type: r.content_type ? String(r.content_type) : "news",
+            author_name: r.author_name ? String(r.author_name) : undefined,
+            published_at: r.published_at ? String(r.published_at) : undefined,
+            tags: Array.isArray(r.tags) ? r.tags.map((t: unknown) => String(t)) : [],
+          }))
+          .filter((a: CmsArticle) => a.slug && a.title && a.slug !== currentSlug)
+          .slice(0, 3);
+
+        if (items.length > 0) return items;
+      }
+    }
+
+    const latest = await getLatestArticles();
+    return latest.filter((a) => a.slug !== currentSlug).slice(0, 3);
+  } catch {
+    return [];
+  }
+}
