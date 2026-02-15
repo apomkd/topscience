@@ -9,3 +9,8 @@ apps/web/.next/
 
 # local backups
 backups/
+.venv-ai/
+apps/web/.next/
+ops/scripts/__pycache__/
+ops/scripts/.tmp/
+ops/scripts/*.pyc
